@@ -4,12 +4,15 @@ on:
   pull_request:
     branches:
       - main
-    paths-ignore: [ '**.md' ]
+    paths-ignore: ['**.md']
   push:
-    paths-ignore: [ '**.md' ]
+    paths-ignore: ['**.md']
     branches:
       - main
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   reports:
@@ -18,7 +21,22 @@ jobs:
 
     strategy:
       matrix:
-        reporter: [ jest-junit, mocha-json, swift-xunit, dart-json, dotnet-trx, java-junit, flutter-json ]
+        reporter:
+          [
+            jest-junit,
+            mocha-json,
+            swift-xunit,
+            dart-json,
+            dotnet-trx,
+            java-junit,
+            flutter-json,
+            dotnet-nunit,
+            golang-json,
+            tester-junit,
+            phpunit-junit,
+            python-xunit,
+            rspec-json
+          ]
         include:
           - reporter: jest-junit
             path: ./__tests__/fixtures/jest-junit.xml
@@ -34,9 +52,21 @@ jobs:
             path: ./__tests__/fixtures/external/java/pulsar-test-report.xml
           - reporter: flutter-json
             path: ./__tests__/fixtures/external/flutter/provider-test-results.json
+          - reporter: dotnet-nunit
+            path: ./__tests__/fixtures/dotnet-nunit.xml
+          - reporter: golang-json
+            path: ./__tests__/fixtures/golang-json.json
+          - reporter: tester-junit
+            path: ./__tests__/fixtures/nette-tester/tester-v1.7-report.xml
+          - reporter: phpunit-junit
+            path: ./__tests__/fixtures/phpunit/phpunit.xml
+          - reporter: python-xunit
+            path: ./__tests__/fixtures/python-xunit-pytest.xml
+          - reporter: rspec-json
+            path: ./__tests__/fixtures/rspec-json.json
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - uses: ./
       with:
